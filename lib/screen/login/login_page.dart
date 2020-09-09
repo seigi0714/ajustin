@@ -1,12 +1,13 @@
+import 'package:adjustin_app/screen/register/register.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 
-class RegisterPage extends StatelessWidget {
+class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('新規登録'),
+        title: Text('ログイン'),
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -17,12 +18,11 @@ class RegisterPage extends StatelessWidget {
               emailField(),
               SizedBox(height: 10),
               passwordField(),
-              SizedBox(height: 10),
-              Text('利用規約に同意して'),
+              SizedBox(),
               RaisedButton(
                   color: Colors.blue,
                   child: Text(
-                    '新規登録',
+                    'ログイン',
                     style: TextStyle(color: Colors.white),
                   ),
                   onPressed: () {}),
@@ -30,7 +30,7 @@ class RegisterPage extends StatelessWidget {
               Divider(
                 thickness: 1,
               ),
-              Text('SNSで登録の方はこちら'),
+              Text('SNSでのログインはこちら'),
               SizedBox(height: 10),
               SignInButton(
                 Buttons.GoogleDark,
@@ -41,6 +41,19 @@ class RegisterPage extends StatelessWidget {
                 onPressed: () {},
               ),
               SignInButton(Buttons.AppleDark, onPressed: () {}),
+              SizedBox(height: 30),
+              Text('アカウントをお持ちでない方は'),
+              FlatButton(
+                  onPressed: () async {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => RegisterPage()));
+                  },
+                  child: Text(
+                    '新規登録画面へ',
+                    style: TextStyle(color: Colors.indigo),
+                  ))
             ],
           ),
         ),
