@@ -1,3 +1,4 @@
+import 'package:adjustin_app/auth/auth_state.dart';
 import 'package:adjustin_app/screen/register/register_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -6,12 +7,13 @@ import 'package:state_notifier/state_notifier.dart';
 
 final registerProvider =
     StateNotifierProvider.autoDispose((ref) => RegisterFormController());
+final authProvider = StateNotifierProvider((ref) => AuthController());
 
 class RegisterPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ScopedReader watch) {
-    final emailController = TextEditingController();
-    final passController = TextEditingController();
+    final emailTextController = TextEditingController();
+    final passTextController = TextEditingController();
     RegisterFormController registerController = watch(registerProvider);
     return Scaffold(
       appBar: AppBar(
@@ -23,9 +25,9 @@ class RegisterPage extends ConsumerWidget {
           padding: EdgeInsets.symmetric(vertical: 30, horizontal: 30),
           child: Column(
             children: <Widget>[
-              emailField(emailController, registerController),
+              emailField(emailTextController, registerController),
               SizedBox(height: 10),
-              passwordField(passController, registerController),
+              passwordField(passTextController, registerController),
               SizedBox(height: 10),
               Text('利用規約に同意して'),
               RaisedButton(
@@ -35,8 +37,13 @@ class RegisterPage extends ConsumerWidget {
                     style: TextStyle(color: Colors.white),
                   ),
                   onPressed: () {
-                    print(context.read(registerProvider).state.email);
-                    print(registerController.state.pass);
+                    try {
+                      context.read(authProvider).registerWithEmail(
+                          registerController.state.email,
+                          registerController.state.pass);
+                    } catch (e) {
+                      print(e.toString());
+                    }
                   }),
               SizedBox(height: 60),
               Divider(

@@ -1,10 +1,19 @@
+import 'package:adjustin_app/auth/auth_state.dart';
+import 'package:adjustin_app/screen/login/login_state.dart';
 import 'package:adjustin_app/screen/register/register.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class LoginPage extends StatelessWidget {
+final authProvider = StateNotifierProvider((ref) => AuthController());
+final loginProvider = StateNotifierProvider((ref) => LoginFormController());
+
+class LoginPage extends ConsumerWidget {
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ScopedReader watch) {
+    final emailTextController = TextEditingController();
+    final passTextController = TextEditingController();
+    LoginFormController loginFormController = watch(loginProvider);
     return Scaffold(
       appBar: AppBar(
         title: Text('ログイン'),
@@ -25,7 +34,15 @@ class LoginPage extends StatelessWidget {
                     'ログイン',
                     style: TextStyle(color: Colors.white),
                   ),
-                  onPressed: () {}),
+                  onPressed: () {
+                    try {
+                      context.read(authProvider).loginWithEmail(
+                          loginFormController.state.email,
+                          loginFormController.state.pass);
+                    } catch (e) {
+                      print(e.toString());
+                    }
+                  }),
               SizedBox(height: 60),
               Divider(
                 thickness: 1,
