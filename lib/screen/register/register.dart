@@ -1,4 +1,5 @@
 import 'package:adjustin_app/auth/auth_state.dart';
+import 'package:adjustin_app/auth/wrapper.dart';
 import 'package:adjustin_app/screen/register/register_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,7 +8,6 @@ import 'package:state_notifier/state_notifier.dart';
 
 final registerProvider =
     StateNotifierProvider.autoDispose((ref) => RegisterFormController());
-final authProvider = StateNotifierProvider((ref) => AuthController());
 
 class RegisterPage extends ConsumerWidget {
   @override

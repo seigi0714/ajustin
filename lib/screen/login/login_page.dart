@@ -1,11 +1,10 @@
-import 'package:adjustin_app/auth/auth_state.dart';
+import 'package:adjustin_app/auth/wrapper.dart';
 import 'package:adjustin_app/screen/login/login_state.dart';
 import 'package:adjustin_app/screen/register/register.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final authProvider = StateNotifierProvider((ref) => AuthController());
 final loginProvider = StateNotifierProvider((ref) => LoginFormController());
 
 class LoginPage extends ConsumerWidget {
@@ -24,9 +23,9 @@ class LoginPage extends ConsumerWidget {
           padding: EdgeInsets.symmetric(vertical: 30, horizontal: 30),
           child: Column(
             children: <Widget>[
-              emailField(),
+              emailField(emailTextController, loginFormController),
               SizedBox(height: 10),
-              passwordField(),
+              passwordField(passTextController, loginFormController),
               SizedBox(),
               RaisedButton(
                   color: Colors.blue,
@@ -34,9 +33,9 @@ class LoginPage extends ConsumerWidget {
                     'ログイン',
                     style: TextStyle(color: Colors.white),
                   ),
-                  onPressed: () {
+                  onPressed: () async {
                     try {
-                      context.read(authProvider).loginWithEmail(
+                      await context.read(authProvider).loginWithEmail(
                           loginFormController.state.email,
                           loginFormController.state.pass);
                     } catch (e) {
@@ -79,8 +78,13 @@ class LoginPage extends ConsumerWidget {
   }
 }
 
-Widget emailField() {
+Widget emailField(TextEditingController emailController,
+    LoginFormController loginFormController) {
   return TextField(
+      onChanged: (text) {
+        loginFormController.changeEmail(text);
+      },
+      controller: emailController,
       style: TextStyle(height: 1),
       decoration: InputDecoration(
           prefixIcon: Icon(Icons.email),
@@ -100,8 +104,13 @@ Widget emailField() {
           hintText: 'example@gmail.com'));
 }
 
-Widget passwordField() {
+Widget passwordField(TextEditingController passController,
+    LoginFormController loginFormController) {
   return TextField(
+      onChanged: (text) {
+        loginFormController.changePass(text);
+      },
+      controller: passController,
       obscureText: true,
       style: TextStyle(height: 1),
       decoration: InputDecoration(

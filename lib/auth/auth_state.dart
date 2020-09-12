@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as Auth;
 import 'package:state_notifier/state_notifier.dart';
@@ -19,9 +21,24 @@ class AuthController extends StateNotifier<AuthState> {
     _userState();
   }
 
+//  final _streamController = StreamController<AuthState>.broadcast();
+//  Stream<AuthState> get stream => _streamController.stream;
+
+//  @override
+//  set state(AuthState state) {
+//    super.state = state;
+//    _streamController.add(state);
+//  }
+//
+//  @override
+//  void dispose() {
+//    _streamController.close();
+//    super.dispose();
+//  }
+
   void _userState() {
     final Auth.User firebaseUser = Auth.FirebaseAuth.instance.currentUser;
-    state = state.copyWith(user: firebaseUser);
+    state = AuthState(user: firebaseUser, loading: false);
   }
 
   Future loginWithEmail(String email, String pass) async {
@@ -36,6 +53,7 @@ class AuthController extends StateNotifier<AuthState> {
         email: email,
         password: pass,
       );
+      _userState();
     } catch (e) {
       throw (_convertErrorMessage(e.code));
     }
@@ -64,6 +82,11 @@ class AuthController extends StateNotifier<AuthState> {
     } catch (e) {
       throw (_convertErrorMessage(e.code));
     }
+  }
+
+  Future logout() async {
+    await Auth.FirebaseAuth.instance.signOut();
+    _userState();
   }
 }
 
