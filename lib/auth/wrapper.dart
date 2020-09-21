@@ -18,7 +18,7 @@ class Wrapper extends StatelessWidget {
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
         home: Consumer(builder: (context, watch, child) {
-          AuthState authState = watch(authProvider.state);
+          final authState = watch(authProvider.state);
           return authState.user != null ? TopPage() : LoginPage();
         }));
   }

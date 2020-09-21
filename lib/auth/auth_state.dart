@@ -37,7 +37,7 @@ class AuthController extends StateNotifier<AuthState> {
 //  }
 
   void _userState() {
-    final Auth.User firebaseUser = Auth.FirebaseAuth.instance.currentUser;
+    final firebaseUser = Auth.FirebaseAuth.instance.currentUser;
     state = AuthState(user: firebaseUser, loading: false);
   }
 
@@ -54,8 +54,9 @@ class AuthController extends StateNotifier<AuthState> {
         password: pass,
       );
       _userState();
-    } catch (e) {
-      throw (_convertErrorMessage(e.code));
+    } on FirebaseException catch (e) {
+      final Error error = ArgumentError(_convertErrorMessage(e.code));
+      throw error;
     }
   }
 
@@ -75,12 +76,13 @@ class AuthController extends StateNotifier<AuthState> {
       await FirebaseFirestore.instance
           .collection('users')
           .doc(result.user.uid)
-          .set({
+          .set(<String, dynamic>{
         'createdAt': DateTime.now(),
       });
       _userState();
-    } catch (e) {
-      throw (_convertErrorMessage(e.code));
+    } on FirebaseException catch (e) {
+      final Error error = ArgumentError(_convertErrorMessage(e.code));
+      throw error;
     }
   }
 
@@ -90,7 +92,7 @@ class AuthController extends StateNotifier<AuthState> {
   }
 }
 
-String _convertErrorMessage(e) {
+String _convertErrorMessage(String e) {
   switch (e) {
     case 'invalid-email':
       return 'メールアドレスを正しい形式で入力してください';

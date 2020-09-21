@@ -1,10 +1,9 @@
-import 'package:adjustin_app/auth/auth_state.dart';
 import 'package:adjustin_app/auth/wrapper.dart';
 import 'package:adjustin_app/screen/register/register_state.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
-import 'package:state_notifier/state_notifier.dart';
 
 final registerProvider =
     StateNotifierProvider.autoDispose((ref) => RegisterFormController());
@@ -14,25 +13,25 @@ class RegisterPage extends ConsumerWidget {
   Widget build(BuildContext context, ScopedReader watch) {
     final emailTextController = TextEditingController();
     final passTextController = TextEditingController();
-    RegisterFormController registerController = watch(registerProvider);
+    final registerController = watch(registerProvider);
     return Scaffold(
       appBar: AppBar(
-        title: Text('新規登録'),
+        title: const Text('新規登録'),
       ),
       body: SingleChildScrollView(
         child: Container(
           width: double.infinity,
-          padding: EdgeInsets.symmetric(vertical: 30, horizontal: 30),
+          padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 30),
           child: Column(
             children: <Widget>[
               emailField(emailTextController, registerController),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               passwordField(passTextController, registerController),
-              SizedBox(height: 10),
-              Text('利用規約に同意して'),
+              const SizedBox(height: 10),
+              const Text('利用規約に同意して'),
               RaisedButton(
                   color: Colors.blue,
-                  child: Text(
+                  child: const Text(
                     '新規登録',
                     style: TextStyle(color: Colors.white),
                   ),
@@ -41,16 +40,16 @@ class RegisterPage extends ConsumerWidget {
                       context.read(authProvider).registerWithEmail(
                           registerController.state.email,
                           registerController.state.pass);
-                    } catch (e) {
+                    } on FirebaseException catch (e) {
                       print(e.toString());
                     }
                   }),
-              SizedBox(height: 60),
-              Divider(
+              const SizedBox(height: 60),
+              const Divider(
                 thickness: 1,
               ),
-              Text('SNSで登録の方はこちら'),
-              SizedBox(height: 10),
+              const Text('SNSで登録の方はこちら'),
+              const SizedBox(height: 10),
               SignInButton(
                 Buttons.GoogleDark,
                 onPressed: () {},
@@ -75,20 +74,20 @@ Widget emailField(TextEditingController controller,
         registerController.changeEmail(text);
       },
       controller: controller,
-      style: TextStyle(height: 1),
+      style: const TextStyle(height: 1),
       decoration: InputDecoration(
-          prefixIcon: Icon(Icons.email),
+          prefixIcon: const Icon(Icons.email),
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(25.0),
-            borderSide: BorderSide(
+            borderRadius: BorderRadius.circular(25),
+            borderSide: const BorderSide(
               color: Colors.black,
             ),
           ),
           focusedBorder: OutlineInputBorder(
-            borderRadius: new BorderRadius.circular(25.0),
-            borderSide: BorderSide(
+            borderRadius: BorderRadius.circular(25),
+            borderSide: const BorderSide(
               color: Colors.blue,
-              width: 2.0,
+              width: 2,
             ),
           ),
           hintText: 'example@gmail.com'));
@@ -101,21 +100,21 @@ Widget passwordField(TextEditingController controller,
         registerController.changePass(text);
       },
       obscureText: true,
-      style: TextStyle(height: 1),
+      style: const TextStyle(height: 1),
       decoration: InputDecoration(
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(25.0),
-            borderSide: BorderSide(
+            borderRadius: BorderRadius.circular(25),
+            borderSide: const BorderSide(
               color: Colors.black,
             ),
           ),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(25.0),
-            borderSide: BorderSide(
+            borderRadius: BorderRadius.circular(25),
+            borderSide: const BorderSide(
               color: Colors.blue,
-              width: 2.0,
+              width: 2,
             ),
           ),
           hintText: 'パスワード',
-          prefixIcon: Icon(Icons.lock)));
+          prefixIcon: const Icon(Icons.lock)));
 }
