@@ -20,6 +20,7 @@ dependencies:
   firebase_auth: ^0.18.0+1
   flutter_state_notifier: ^0.6.1
   freezed_annotation:
+  pedantic_mono: ^1.10.0+2
 
 dev_dependencies:
   flutter_test:
