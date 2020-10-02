@@ -35,14 +35,15 @@ class RegisterPage extends ConsumerWidget {
                     '新規登録',
                     style: TextStyle(color: Colors.white),
                   ),
-                  onPressed: () {
+                  onPressed: () async {
                     try {
-                      context.read(authProvider).registerWithEmail(
+                      await context.read(authProvider).registerWithEmail(
                           registerController.state.email,
                           registerController.state.pass);
-                    } on FirebaseException catch (e) {
+                    } catch (e) {
                       print(e.toString());
                     }
+                    Navigator.pop(context);
                   }),
               const SizedBox(height: 60),
               const Divider(

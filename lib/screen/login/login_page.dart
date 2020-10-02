@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final loginProvider = StateNotifierProvider((ref) => LoginFormController());
+final loginProvider =
+    StateNotifierProvider.autoDispose((ref) => LoginFormController());
 
 class LoginPage extends ConsumerWidget {
   @override
@@ -38,7 +39,7 @@ class LoginPage extends ConsumerWidget {
                       await context.read(authProvider).loginWithEmail(
                           loginFormController.state.email,
                           loginFormController.state.pass);
-                    } on Exception catch (e) {
+                    } catch (e) {
                       print(e.toString());
                     }
                   }),

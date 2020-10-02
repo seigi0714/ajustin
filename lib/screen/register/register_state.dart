@@ -15,7 +15,7 @@ class RegisterFormController extends StateNotifier<RegisterFormState> {
   RegisterFormController() : super(RegisterFormState(email: '', pass: '')) {}
 
   void changeEmail(String email) {
-    state = state.copyWith(email: email);
+    state = state.copyWith(email: email.trim());
   }
 
   void changePass(String pass) {

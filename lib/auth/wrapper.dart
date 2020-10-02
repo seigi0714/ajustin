@@ -1,10 +1,14 @@
 import 'package:adjustin_app/auth/auth_state.dart';
 import 'package:adjustin_app/screen/login/login_page.dart';
 import 'package:adjustin_app/screen/top/top_page.dart';
+import 'package:adjustin_app/screen/top/top_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final authProvider = StateNotifierProvider((ref) => AuthController());
+final StateNotifierProvider<AuthController> authProvider =
+    StateNotifierProvider((ref) => AuthController());
+final StateNotifierProvider<TopController> pageProvider =
+    StateNotifierProvider((ref) => TopController());
 
 class Wrapper extends StatelessWidget {
   @override
