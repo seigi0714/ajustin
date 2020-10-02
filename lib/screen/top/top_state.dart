@@ -10,9 +10,13 @@ abstract class TopState with _$TopState {
   }) = _TopState;
 }
 
-class PageController extends StateNotifier<TopState> {
-  PageController()
+class TopController extends StateNotifier<TopState> {
+  TopController()
       : super(TopState(
           pageIndex: 0,
         )) {}
+
+  void changePageIndex(int index) {
+    state = state.copyWith(pageIndex: index);
+  }
 }

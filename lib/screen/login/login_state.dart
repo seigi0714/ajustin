@@ -13,7 +13,7 @@ class LoginFormController extends StateNotifier<LoginFormState> {
   LoginFormController() : super(LoginFormState(email: '', pass: '')) {}
 
   void changeEmail(String email) {
-    state = state.copyWith(email: email);
+    state = state.copyWith(email: email.trim());
   }
 
   void changePass(String pass) {
