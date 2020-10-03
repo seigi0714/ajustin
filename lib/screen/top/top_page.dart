@@ -1,6 +1,5 @@
-import 'package:adjustin_app/auth/wrapper.dart';
 import 'package:adjustin_app/screen/AddSchedule/add_schedule_page.dart';
-import 'package:adjustin_app/screen/Home/home_page.dart';
+import 'package:adjustin_app/screen/Calendar/calendar_page.dart';
 import 'package:adjustin_app/screen/My/my_page.dart';
 import 'package:adjustin_app/screen/top/top_state.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +11,7 @@ class TopPage extends StatelessWidget {
 
   @override
   List<StatelessWidget> currentPage = [
-    HomePage(),
+    CalendarPage(),
     MyPage(),
   ];
 

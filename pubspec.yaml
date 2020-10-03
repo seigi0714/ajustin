@@ -20,8 +20,9 @@ dependencies:
   firebase_auth: ^0.18.0+1
   flutter_state_notifier: ^0.6.1
   freezed_annotation:
-  pedantic_mono: ^1.10.0+2
   analyzer: 0.39.14
+  table_calendar: ^2.2.3
+  intl: ^0.16.1
 
 dev_dependencies:
   flutter_test:
