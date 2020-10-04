@@ -8,17 +8,19 @@ part of 'calendar_state.dart';
 // **************************************************************************
 
 T _$identity<T>(T value) => value;
-CalendarState _$CalendarStateFromJson(Map<String, dynamic> json) {
-  return _CalendarState.fromJson(json);
-}
 
 class _$CalendarStateTearOff {
   const _$CalendarStateTearOff();
 
 // ignore: unused_element
-  _CalendarState call({Map<DateTime, List<dynamic>> events}) {
+  _CalendarState call(
+      {Map<DateTime, List<Item>> events,
+      List<Item> selectedEvents,
+      bool loading}) {
     return _CalendarState(
       events: events,
+      selectedEvents: selectedEvents,
+      loading: loading,
     );
   }
 }
@@ -27,9 +29,10 @@ class _$CalendarStateTearOff {
 const $CalendarState = _$CalendarStateTearOff();
 
 mixin _$CalendarState {
-  Map<DateTime, List<dynamic>> get events;
+  Map<DateTime, List<Item>> get events;
+  List<Item> get selectedEvents;
+  bool get loading;
 
-  Map<String, dynamic> toJson();
   $CalendarStateCopyWith<CalendarState> get copyWith;
 }
 
@@ -37,7 +40,10 @@ abstract class $CalendarStateCopyWith<$Res> {
   factory $CalendarStateCopyWith(
           CalendarState value, $Res Function(CalendarState) then) =
       _$CalendarStateCopyWithImpl<$Res>;
-  $Res call({Map<DateTime, List<dynamic>> events});
+  $Res call(
+      {Map<DateTime, List<Item>> events,
+      List<Item> selectedEvents,
+      bool loading});
 }
 
 class _$CalendarStateCopyWithImpl<$Res>
@@ -51,11 +57,17 @@ class _$CalendarStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object events = freezed,
+    Object selectedEvents = freezed,
+    Object loading = freezed,
   }) {
     return _then(_value.copyWith(
       events: events == freezed
           ? _value.events
-          : events as Map<DateTime, List<dynamic>>,
+          : events as Map<DateTime, List<Item>>,
+      selectedEvents: selectedEvents == freezed
+          ? _value.selectedEvents
+          : selectedEvents as List<Item>,
+      loading: loading == freezed ? _value.loading : loading as bool,
     ));
   }
 }
@@ -66,7 +78,10 @@ abstract class _$CalendarStateCopyWith<$Res>
           _CalendarState value, $Res Function(_CalendarState) then) =
       __$CalendarStateCopyWithImpl<$Res>;
   @override
-  $Res call({Map<DateTime, List<dynamic>> events});
+  $Res call(
+      {Map<DateTime, List<Item>> events,
+      List<Item> selectedEvents,
+      bool loading});
 }
 
 class __$CalendarStateCopyWithImpl<$Res>
@@ -82,28 +97,34 @@ class __$CalendarStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object events = freezed,
+    Object selectedEvents = freezed,
+    Object loading = freezed,
   }) {
     return _then(_CalendarState(
       events: events == freezed
           ? _value.events
-          : events as Map<DateTime, List<dynamic>>,
+          : events as Map<DateTime, List<Item>>,
+      selectedEvents: selectedEvents == freezed
+          ? _value.selectedEvents
+          : selectedEvents as List<Item>,
+      loading: loading == freezed ? _value.loading : loading as bool,
     ));
   }
 }
 
-@JsonSerializable()
 class _$_CalendarState with DiagnosticableTreeMixin implements _CalendarState {
-  const _$_CalendarState({this.events});
-
-  factory _$_CalendarState.fromJson(Map<String, dynamic> json) =>
-      _$_$_CalendarStateFromJson(json);
+  const _$_CalendarState({this.events, this.selectedEvents, this.loading});
 
   @override
-  final Map<DateTime, List<dynamic>> events;
+  final Map<DateTime, List<Item>> events;
+  @override
+  final List<Item> selectedEvents;
+  @override
+  final bool loading;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'CalendarState(events: $events)';
+    return 'CalendarState(events: $events, selectedEvents: $selectedEvents, loading: $loading)';
   }
 
   @override
@@ -111,7 +132,9 @@ class _$_CalendarState with DiagnosticableTreeMixin implements _CalendarState {
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('type', 'CalendarState'))
-      ..add(DiagnosticsProperty('events', events));
+      ..add(DiagnosticsProperty('events', events))
+      ..add(DiagnosticsProperty('selectedEvents', selectedEvents))
+      ..add(DiagnosticsProperty('loading', loading));
   }
 
   @override
@@ -119,32 +142,38 @@ class _$_CalendarState with DiagnosticableTreeMixin implements _CalendarState {
     return identical(this, other) ||
         (other is _CalendarState &&
             (identical(other.events, events) ||
-                const DeepCollectionEquality().equals(other.events, events)));
+                const DeepCollectionEquality().equals(other.events, events)) &&
+            (identical(other.selectedEvents, selectedEvents) ||
+                const DeepCollectionEquality()
+                    .equals(other.selectedEvents, selectedEvents)) &&
+            (identical(other.loading, loading) ||
+                const DeepCollectionEquality().equals(other.loading, loading)));
   }
 
   @override
   int get hashCode =>
-      runtimeType.hashCode ^ const DeepCollectionEquality().hash(events);
+      runtimeType.hashCode ^
+      const DeepCollectionEquality().hash(events) ^
+      const DeepCollectionEquality().hash(selectedEvents) ^
+      const DeepCollectionEquality().hash(loading);
 
   @override
   _$CalendarStateCopyWith<_CalendarState> get copyWith =>
       __$CalendarStateCopyWithImpl<_CalendarState>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$_$_CalendarStateToJson(this);
-  }
 }
 
 abstract class _CalendarState implements CalendarState {
-  const factory _CalendarState({Map<DateTime, List<dynamic>> events}) =
-      _$_CalendarState;
-
-  factory _CalendarState.fromJson(Map<String, dynamic> json) =
-      _$_CalendarState.fromJson;
+  const factory _CalendarState(
+      {Map<DateTime, List<Item>> events,
+      List<Item> selectedEvents,
+      bool loading}) = _$_CalendarState;
 
   @override
-  Map<DateTime, List<dynamic>> get events;
+  Map<DateTime, List<Item>> get events;
+  @override
+  List<Item> get selectedEvents;
+  @override
+  bool get loading;
   @override
   _$CalendarStateCopyWith<_CalendarState> get copyWith;
 }

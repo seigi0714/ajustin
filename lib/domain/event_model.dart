@@ -1,16 +1,35 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Event {}
 
 // 予定
 class Item {
-  Item({
+  Item(
+//    種類
     this.kind,
+//   タイトル
     this.summary,
+//    詳細
     this.description,
+//    場所
     this.location,
+//    予定作者
     this.creator,
     this.start,
     this.end,
-  });
+  );
+
+  factory Item.fromFireStore(DocumentSnapshot doc) {
+    final data = doc.data();
+    return Item(
+        data['kind'],
+        data['summary'],
+        data['description'] ?? '',
+        data['location'] ?? '',
+        Creator(email: data['creator']),
+        Start(dateTime: data['start'].toDate()),
+        End(dateTime: data['end'].toDate));
+  }
 
   String kind;
   String summary;

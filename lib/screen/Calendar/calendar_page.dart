@@ -10,12 +10,13 @@ final _selectedDay = DateTime.now();
 class CalendarPage extends StatelessWidget {
   List<Item> _selectedEvents = [
     Item(
-        kind: 'play',
-        summary: 'テニス',
-        description: '友達と一緒に行う',
-        start: Start(dateTime: DateTime.now()),
-        creator: Creator(email: 'seigibus@ya'),
-        end: End(dateTime: DateTime.now().add(Duration(minutes: 30) * -1)))
+        'play',
+        'テニス',
+        '友達と一緒に行う',
+        '東京',
+        Creator(email: 'seigibus@ya'),
+        Start(dateTime: DateTime.now()),
+        End(dateTime: DateTime.now().add(Duration(minutes: 30) * -1)))
   ];
   final CalendarController _calendarController = CalendarController();
   final Map<DateTime, List<dynamic>> _events = {
