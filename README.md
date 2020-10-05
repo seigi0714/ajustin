@@ -16,3 +16,7 @@
 
 - プランを共有する時広告画像みたいなのを作って共有できる
 - ゆるぼが出来る。
+
+## freezed.dartファイルの自動生成
+
+` $ flutter packages pub run build_runner build `
