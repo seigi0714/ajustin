@@ -23,7 +23,11 @@ class Wrapper extends StatelessWidget {
         ),
         home: Consumer(builder: (context, watch, child) {
           final authState = watch(authProvider.state);
-          return authState.user != null ? TopPage() : LoginPage();
+          return authState.user != null
+              ? TopPage(
+                  user: authState.user,
+                )
+              : LoginPage();
         }));
   }
 }
