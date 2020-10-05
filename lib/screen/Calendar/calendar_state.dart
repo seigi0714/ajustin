@@ -10,30 +10,38 @@ part 'calendar_state.freezed.dart';
 @freezed
 abstract class CalendarState with _$CalendarState {
   const factory CalendarState(
-      {Map<DateTime, List<Item>> events,
-      List<Item> selectedEvents,
+      {Map<DateTime, List<dynamic>> events,
+      List<dynamic> selectedEvents,
+      DateTime headerDate,
       bool loading}) = _CalendarState;
 }
 
 class CalendarStateController extends StateNotifier<CalendarState> {
-  CalendarStateController({this.user})
-      : super(CalendarState(events: null, selectedEvents: [], loading: true)) {
-    _init(user);
+  CalendarStateController(this.user)
+      : super(CalendarState(
+            events: null,
+            selectedEvents: [],
+            headerDate: DateTime.now(),
+            loading: true)) {
+    init(user);
   }
   UserData user;
 
   final db = FirebaseFirestore.instance;
-  Future _init(UserData user) async {
+
+  Future init(UserData user) async {
     final QuerySnapshot eventsDoc = await db
         .collection('users')
         .doc(user.userID)
         .collection('events')
         .get();
-    List<Future<Item>> tasks = eventsDoc.docs.map((doc) async {
-      return _fetchMyItem(doc.id);
+    final docIds = eventsDoc.docs.map((doc) => doc.id);
+    List<Future<Item>> tasks = docIds.map((id) async {
+      return _fetchMyItem(id);
     }).toList();
-    final List<Item> item = await Future.wait(tasks);
-    final Map<DateTime, List<Item>> events = _getCalendarEvents(item);
+    final List<Item> items = await Future.wait(tasks);
+    print(items);
+    final Map<DateTime, List<Item>> events = _getCalendarEvents(items);
     state = state.copyWith(events: events, loading: false);
   }
 
@@ -73,38 +81,8 @@ class CalendarStateController extends StateNotifier<CalendarState> {
     for (int i = 0; i <= loopNum; i++) {
       keyDates.add(_getAddedDate(startDate, i));
     }
-
-    // 予定が周期の時(現状一週間のみ対応している)
-//    if (recurrence != null && recurrence.conditions["FREQ"] == "WEEKLY") {
-//      List dates = recurrence.conditions['BYDAY'].split(",");
-//      dates.forEach((element) {
-//        int plusNum = (baseDates[element] - startDate.weekday) % 7;
-//
-//        int width = 7;
-//        int RepeatNum = recurrence.conditions["COUNT"] != null
-//            ? recurrence.conditions["COUNT"]
-//            : 52; // 一年分繰り返す
-//
-//        for (int i = 0; i <= RepeatNum; i++) {
-//          if (plusNum + width * i == 0) continue;
-//          DateTime addedDates = _getAddedDate(startDate, plusNum + width * i);
-//          if (isEndDate(recurrence, addedDates)) break;
-//          keyDates.add(addedDates);
-//        }
-//      });
-//    }
-
     return keyDates;
   }
-//  bool isEndDate(Recurrence recurrence, addedDates) {
-//    if (recurrence.conditions['UNTIL'] == null) {
-//      return false;
-//    }
-//    return addedDates
-//        .compareTo(DateTime.parse(recurrence.conditions['UNTIL'])) ==
-//        1;
-//    // addedDatesがDateTime.parse(recurrence.conditions['UNTIL'])よりも日付が後なら1
-//  }
 
   /**
    * 任意の数進めた日付を取得する
@@ -114,8 +92,19 @@ class CalendarStateController extends StateNotifier<CalendarState> {
   }
 
   Future<Item> _fetchMyItem(String id) async {
-    final eventDoc =
+    final DocumentSnapshot eventDoc =
         await FirebaseService().db.collection('events').doc(id).get();
-    return Item.fromFireStore(eventDoc);
+    print(eventDoc.id);
+    final Item event = Item.fromFireStore(eventDoc);
+    print(event);
+    return event;
+  }
+
+  void onDaySelected(DateTime day, List<dynamic> events) {
+    state = state.copyWith(selectedEvents: events);
+  }
+
+  void onVisibleDaysChanged(DateTime date) {
+    state = state.copyWith(headerDate: date);
   }
 }
