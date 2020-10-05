@@ -5,7 +5,7 @@ class UserData {
 
   factory UserData.fromFireStore(DocumentSnapshot doc) {
     return UserData._(doc.id, doc.data()['name'] ?? '',
-        doc.data()['imageURL'] ?? '', doc.data()['createdAt']);
+        doc.data()['imageURL'] ?? '', doc.data()['createdAt'].toDate());
   }
 
   final String userID;

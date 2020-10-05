@@ -1,43 +1,40 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 
 class Event {}
 
 // 予定
 class Item {
-  Item(
-//    種類
+  Item._(
     this.kind,
-//   タイトル
     this.summary,
-//    詳細
     this.description,
-//    場所
     this.location,
-//    予定作者
     this.creator,
     this.start,
     this.end,
   );
 
   factory Item.fromFireStore(DocumentSnapshot doc) {
-    final data = doc.data();
-    return Item(
-        data['kind'],
-        data['summary'],
-        data['description'] ?? '',
-        data['location'] ?? '',
-        Creator(email: data['creator']),
-        Start(dateTime: data['start'].toDate()),
-        End(dateTime: data['end'].toDate));
+    print(doc.data()['summary']);
+    return Item._(
+      doc.data()['kind'] ?? '',
+      doc.data()['summary'] ?? 'no title',
+      doc.data()['description'] ?? '',
+      doc.data()['location'] ?? '',
+      Creator(email: doc.data()['creator']),
+      Start(dateTime: Start.fromFireStore(doc.data()['start']).dateTime),
+      End(dateTime: End.fromFireStore(doc.data()['end']).dateTime),
+    );
   }
 
-  String kind;
-  String summary;
-  String description;
-  String location;
-  Creator creator;
-  Start start;
-  End end;
+  final String kind;
+  final String summary;
+  final String description;
+  final String location;
+  final Creator creator;
+  final Start start;
+  final End end;
 }
 
 // 予定作成者
@@ -45,7 +42,7 @@ class Creator {
   Creator({
     this.email,
   });
-  String email;
+  final String email;
 }
 
 // 開始時刻
@@ -53,7 +50,10 @@ class Start {
   Start({
     this.dateTime,
   });
-  DateTime dateTime;
+  final DateTime dateTime;
+  factory Start.fromFireStore(Timestamp date) {
+    return Start(dateTime: date.toDate());
+  }
 }
 
 // 終了時刻
@@ -61,6 +61,9 @@ class End {
   End({
     this.dateTime,
   });
+  factory End.fromFireStore(Timestamp date) {
+    return End(dateTime: date.toDate());
+  }
   factory End.fromJson(Map<String, dynamic> json) {
     String dateToParse;
     if (json['dateTime'] == null) {
@@ -72,5 +75,5 @@ class End {
       dateTime: DateTime.parse(dateToParse),
     );
   }
-  DateTime dateTime;
+  final DateTime dateTime;
 }
