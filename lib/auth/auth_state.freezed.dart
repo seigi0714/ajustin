@@ -13,7 +13,7 @@ class _$AuthStateTearOff {
   const _$AuthStateTearOff();
 
 // ignore: unused_element
-  _AuthState call({User user, bool loading}) {
+  _AuthState call({UserData user, bool loading}) {
     return _AuthState(
       user: user,
       loading: loading,
@@ -25,7 +25,7 @@ class _$AuthStateTearOff {
 const $AuthState = _$AuthStateTearOff();
 
 mixin _$AuthState {
-  User get user;
+  UserData get user;
   bool get loading;
 
   $AuthStateCopyWith<AuthState> get copyWith;
@@ -34,7 +34,7 @@ mixin _$AuthState {
 abstract class $AuthStateCopyWith<$Res> {
   factory $AuthStateCopyWith(AuthState value, $Res Function(AuthState) then) =
       _$AuthStateCopyWithImpl<$Res>;
-  $Res call({User user, bool loading});
+  $Res call({UserData user, bool loading});
 }
 
 class _$AuthStateCopyWithImpl<$Res> implements $AuthStateCopyWith<$Res> {
@@ -50,7 +50,7 @@ class _$AuthStateCopyWithImpl<$Res> implements $AuthStateCopyWith<$Res> {
     Object loading = freezed,
   }) {
     return _then(_value.copyWith(
-      user: user == freezed ? _value.user : user as User,
+      user: user == freezed ? _value.user : user as UserData,
       loading: loading == freezed ? _value.loading : loading as bool,
     ));
   }
@@ -61,7 +61,7 @@ abstract class _$AuthStateCopyWith<$Res> implements $AuthStateCopyWith<$Res> {
           _AuthState value, $Res Function(_AuthState) then) =
       __$AuthStateCopyWithImpl<$Res>;
   @override
-  $Res call({User user, bool loading});
+  $Res call({UserData user, bool loading});
 }
 
 class __$AuthStateCopyWithImpl<$Res> extends _$AuthStateCopyWithImpl<$Res>
@@ -78,7 +78,7 @@ class __$AuthStateCopyWithImpl<$Res> extends _$AuthStateCopyWithImpl<$Res>
     Object loading = freezed,
   }) {
     return _then(_AuthState(
-      user: user == freezed ? _value.user : user as User,
+      user: user == freezed ? _value.user : user as UserData,
       loading: loading == freezed ? _value.loading : loading as bool,
     ));
   }
@@ -88,7 +88,7 @@ class _$_AuthState with DiagnosticableTreeMixin implements _AuthState {
   const _$_AuthState({this.user, this.loading});
 
   @override
-  final User user;
+  final UserData user;
   @override
   final bool loading;
 
@@ -128,10 +128,10 @@ class _$_AuthState with DiagnosticableTreeMixin implements _AuthState {
 }
 
 abstract class _AuthState implements AuthState {
-  const factory _AuthState({User user, bool loading}) = _$_AuthState;
+  const factory _AuthState({UserData user, bool loading}) = _$_AuthState;
 
   @override
-  User get user;
+  UserData get user;
   @override
   bool get loading;
   @override

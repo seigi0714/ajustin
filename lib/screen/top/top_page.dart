@@ -1,27 +1,30 @@
-import 'package:adjustin_app/auth/wrapper.dart';
+import 'package:adjustin_app/domain/user_model.dart';
 import 'package:adjustin_app/screen/AddSchedule/add_schedule_page.dart';
-import 'package:adjustin_app/screen/Home/home_page.dart';
+import 'package:adjustin_app/screen/Calendar/calendar_page.dart';
+import 'package:adjustin_app/screen/Calendar/calendar_state.dart';
 import 'package:adjustin_app/screen/My/my_page.dart';
 import 'package:adjustin_app/screen/top/top_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class TopPage extends StatelessWidget {
+  TopPage({this.user});
+  UserData user;
   final StateNotifierProvider<TopController> pageProvider =
       StateNotifierProvider((ref) => TopController());
-
-  @override
-  List<StatelessWidget> currentPage = [
-    HomePage(),
-    MyPage(),
-  ];
-
   @override
   Widget build(BuildContext context) {
+    final StateNotifierProvider<CalendarStateController> calendarProvider =
+        StateNotifierProvider((ref) => CalendarStateController(user));
     return Consumer(builder: (context, watch, child) {
       final pageState = watch(pageProvider.state);
       return Scaffold(
-        body: currentPage[pageState.pageIndex],
+        body: pageState.pageIndex == 0
+            ? CalendarPage(
+                user: user,
+                calendarProvider: calendarProvider,
+              )
+            : MyPage(),
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: pageState.pageIndex,
           onTap: (index) {

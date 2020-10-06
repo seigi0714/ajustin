@@ -1,5 +1,6 @@
 import 'dart:async';
-
+import 'package:adjustin_app/domain/user_model.dart';
+import 'package:adjustin_app/service/firestore.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as Auth;
 import 'package:firebase_auth/firebase_auth.dart';
@@ -10,7 +11,7 @@ part 'auth_state.freezed.dart';
 
 @freezed
 abstract class AuthState with _$AuthState {
-  const factory AuthState({Auth.User user, bool loading}) = _AuthState;
+  const factory AuthState({UserData user, bool loading}) = _AuthState;
 }
 
 class AuthController extends StateNotifier<AuthState> {
@@ -37,9 +38,15 @@ class AuthController extends StateNotifier<AuthState> {
 //    super.dispose();
 //  }
 
-  void _userState() {
+  Future _userState() async {
     final firebaseUser = Auth.FirebaseAuth.instance.currentUser;
-    state = AuthState(user: firebaseUser, loading: false);
+    final userDoc = await FirebaseService()
+        .db
+        .collection('users')
+        .doc(firebaseUser.uid)
+        .get();
+    final UserData currentUser = UserData.fromFireStore(userDoc);
+    state = state.copyWith(user: currentUser, loading: false);
   }
 
   Future loginWithEmail(String email, String pass) async {
