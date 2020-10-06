@@ -26,7 +26,6 @@ class CalendarPage extends StatelessWidget {
                 mainAxisSize: MainAxisSize.max,
                 children: <Widget>[
                   _buildTableCalendar(context, calendarState),
-                  // _buildTableCalendarWithBuilders(),
                   const SizedBox(height: 8),
                   Expanded(child: _buildEventList(calendarState)),
                 ],
@@ -40,24 +39,123 @@ class CalendarPage extends StatelessWidget {
     return TableCalendar(
       events: calendarState.events,
       calendarController: _calendarController,
-      startingDayOfWeek: StartingDayOfWeek.monday,
-      calendarStyle: CalendarStyle(
-        selectedColor: Colors.deepOrange[400],
-        todayColor: Colors.deepOrange[200],
-        markersColor: Colors.brown[700],
-        outsideDaysVisible: false,
-      ),
+      builders: _calendarBuilder(),
+      startingDayOfWeek: StartingDayOfWeek.sunday,
       headerStyle: HeaderStyle(
-        formatButtonTextStyle:
-            const TextStyle().copyWith(color: Colors.white, fontSize: 15),
-        formatButtonDecoration: BoxDecoration(
-          color: Colors.deepOrange[400],
-          borderRadius: BorderRadius.circular(16),
-        ),
+        centerHeaderTitle: true,
+        formatButtonVisible: false,
       ),
       onDaySelected: (date, events) {
         context.read(calendarProvider).onDaySelected(date, events);
       },
+    );
+  }
+
+  CalendarBuilders _calendarBuilder() {
+    return CalendarBuilders(
+      selectedDayBuilder: (context, date, _) {
+        return Container(
+          margin: const EdgeInsets.all(4.0),
+          padding: const EdgeInsets.only(top: 5.0, left: 6.0),
+          color: Colors.black26,
+          width: 100,
+          height: 100,
+          child: Text(
+            '${date.day}',
+            style: TextStyle().copyWith(fontSize: 16.0),
+          ),
+        );
+      },
+      todayDayBuilder: (context, date, _) {
+        return Container(
+          margin: const EdgeInsets.all(4.0),
+          padding: const EdgeInsets.only(top: 5.0, left: 6.0),
+          color: Colors.black12,
+          width: 100,
+          height: 100,
+          child: Text(
+            '${date.day}',
+            style: TextStyle().copyWith(fontSize: 16.0),
+          ),
+        );
+      },
+      markersBuilder: (context, date, events, holidays) {
+        final children = <Widget>[];
+        if (events.isNotEmpty) {
+          children.add(
+            _buildEventsMarker(date, events),
+          );
+        }
+
+        if (holidays.isNotEmpty) {
+          children.add(
+            Positioned(
+              right: -2,
+              top: -2,
+              child: _buildHolidaysMarker(),
+            ),
+          );
+        }
+        return children;
+      },
+    );
+  }
+
+  Widget _buildEventsMarker(DateTime date, List events) {
+    return events.length >= 5
+        ? Positioned(
+            right: 1,
+            bottom: 1,
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              decoration: BoxDecoration(
+                shape: BoxShape.rectangle,
+                color: _calendarController.isSelected(date)
+                    ? Colors.brown[500]
+                    : _calendarController.isToday(date)
+                        ? Colors.brown[300]
+                        : Colors.blue[400],
+              ),
+              width: 16.0,
+              height: 16.0,
+              child: Center(
+                child: Text(
+                  '${events.length}',
+                  style: TextStyle().copyWith(
+                    color: Colors.white,
+                    fontSize: 12.0,
+                  ),
+                ),
+              ),
+            ),
+          )
+        : Positioned(
+            bottom: 4,
+            child: Container(
+              width: 50,
+              padding: EdgeInsets.all(2.0),
+              child: Wrap(
+                alignment: WrapAlignment.spaceAround,
+                runSpacing: 3.0,
+                children: events.map((event) {
+                  return Container(
+                      width: 7.0,
+                      height: 7.0,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.black,
+                      ));
+                }).toList(),
+              ),
+            ),
+          );
+  }
+
+  Widget _buildHolidaysMarker() {
+    return Icon(
+      Icons.add_box,
+      size: 20.0,
+      color: Colors.blueGrey[800],
     );
   }
 
@@ -77,7 +175,7 @@ class CalendarPage extends StatelessWidget {
             child: Column(
               children: [
                 SizedBox(height: 5),
-                Text(_focusDate(calendarState.focusDate) + 'の予定'),
+                Text(_focusDate(calendarState.focusDate)),
                 ListView.separated(
                     itemCount: calendarState.selectedEvents.length,
                     separatorBuilder: (BuildContext context, int index) =>
