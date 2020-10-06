@@ -11,7 +11,6 @@ class CalendarPage extends StatelessWidget {
   CalendarPage({this.user, this.calendarProvider});
   UserData user;
   StateNotifierProvider<CalendarStateController> calendarProvider;
-  List<Item> _selectedEvents = [];
   final CalendarController _calendarController = CalendarController();
   @override
   Widget build(BuildContext context) {
@@ -26,11 +25,8 @@ class CalendarPage extends StatelessWidget {
             : Column(
                 mainAxisSize: MainAxisSize.max,
                 children: <Widget>[
-                  // Switch out 2 lines below to play with TableCalendar's settings
-                  //-----------------------
                   _buildTableCalendar(context, calendarState),
                   // _buildTableCalendarWithBuilders(),
-                  const SizedBox(height: 8),
                   const SizedBox(height: 8),
                   Expanded(child: _buildEventList(calendarState)),
                 ],
@@ -42,55 +38,88 @@ class CalendarPage extends StatelessWidget {
   Widget _buildTableCalendar(
       BuildContext context, CalendarState calendarState) {
     return TableCalendar(
-        events: calendarState.events,
-        calendarController: _calendarController,
-        startingDayOfWeek: StartingDayOfWeek.monday,
-        calendarStyle: CalendarStyle(
-          selectedColor: Colors.deepOrange[400],
-          todayColor: Colors.deepOrange[200],
-          markersColor: Colors.brown[700],
-          outsideDaysVisible: false,
-        ),
-        headerStyle: HeaderStyle(
-          formatButtonTextStyle:
-              const TextStyle().copyWith(color: Colors.white, fontSize: 15),
-          formatButtonDecoration: BoxDecoration(
-            color: Colors.deepOrange[400],
-            borderRadius: BorderRadius.circular(16),
-          ),
-        ),
-        onDaySelected: (date, events) {
-          context.read(calendarProvider).onDaySelected(date, events);
-        },
-        onVisibleDaysChanged: (_, __, ___) {
-          final DateTime headerDate = _calendarController.focusedDay;
-          context.read(calendarProvider).onVisibleDaysChanged(headerDate);
-        });
-  }
-
-  Widget _buildEventList(CalendarState calendarState) {
-    return ConstrainedBox(
-      constraints: BoxConstraints(),
-      child: ListView(
-        shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
-        children: calendarState.selectedEvents.map((event) {
-          return Card(
-            child: ListTile(
-              title: Text(event.summary +
-                  _getDateTimeStr(event.start.dateTime, event.end.dateTime)),
-            ),
-          );
-        }).toList(),
+      events: calendarState.events,
+      calendarController: _calendarController,
+      startingDayOfWeek: StartingDayOfWeek.monday,
+      calendarStyle: CalendarStyle(
+        selectedColor: Colors.deepOrange[400],
+        todayColor: Colors.deepOrange[200],
+        markersColor: Colors.brown[700],
+        outsideDaysVisible: false,
       ),
+      headerStyle: HeaderStyle(
+        formatButtonTextStyle:
+            const TextStyle().copyWith(color: Colors.white, fontSize: 15),
+        formatButtonDecoration: BoxDecoration(
+          color: Colors.deepOrange[400],
+          borderRadius: BorderRadius.circular(16),
+        ),
+      ),
+      onDaySelected: (date, events) {
+        context.read(calendarProvider).onDaySelected(date, events);
+      },
     );
   }
 
-  String _getDateTimeStr(DateTime startDate, DateTime endDate) {
-    DateFormat formatter = DateFormat.Md().add_jm();
+  Widget _buildEventList(CalendarState calendarState) {
+    final List<Widget> _eventLists = calendarState.selectedEvents.map((event) {
+      return ListTile(
+          leading: _getDateTimeStr(event.start.dateTime, event.end.dateTime,
+              calendarState.focusDate),
+          title: Text(event.summary));
+    }).toList();
+    return Card(
+      margin: EdgeInsets.zero,
+      clipBehavior: Clip.antiAlias,
+      child: ConstrainedBox(
+          constraints: BoxConstraints(),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                SizedBox(height: 5),
+                Text(_focusDate(calendarState.focusDate) + 'の予定'),
+                ListView.separated(
+                    itemCount: calendarState.selectedEvents.length,
+                    separatorBuilder: (BuildContext context, int index) =>
+                        Divider(
+                          color: Colors.black,
+                        ),
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemBuilder: (BuildContext context, int index) {
+                      return _eventLists[index];
+                    }),
+              ],
+            ),
+          )),
+    );
+  }
+
+  String _focusDate(DateTime date) {
+    return DateFormat('yyyy/MM/dd').format(date);
+  }
+
+  Widget _getDateTimeStr(
+      DateTime startDate, DateTime endDate, DateTime focusDate) {
+    DateFormat formatter = DateFormat('hh:mm');
     String startTime = formatter.format(startDate).toString();
     String endTime = formatter.format(endDate).toString();
-
-    return "( " + startTime + '~' + endTime + ")";
+    // その日スタートの予定かどうか
+    bool isStartToday = focusDate.difference(startDate).inDays == 0 &&
+        focusDate.day == startDate.day;
+    // その日に終わる予定かどうか
+    bool isEndToday = focusDate.difference(endDate).inDays == 0 &&
+        focusDate.day == endDate.day;
+    return Column(children: [
+      Text(
+        startTime,
+        style: TextStyle(color: isStartToday ? Colors.black : Colors.grey),
+      ),
+      Text('｜'),
+      Text(
+        endTime,
+        style: TextStyle(color: isEndToday ? Colors.black : Colors.grey),
+      )
+    ]);
   }
 }

@@ -12,17 +12,19 @@ abstract class CalendarState with _$CalendarState {
   const factory CalendarState(
       {Map<DateTime, List<dynamic>> events,
       List<dynamic> selectedEvents,
-      DateTime headerDate,
+      DateTime focusDate,
       bool loading}) = _CalendarState;
 }
 
 class CalendarStateController extends StateNotifier<CalendarState> {
   CalendarStateController(this.user)
-      : super(CalendarState(
-            events: null,
-            selectedEvents: [],
-            headerDate: DateTime.now(),
-            loading: true)) {
+      : super(
+          CalendarState(
+              events: null,
+              selectedEvents: [],
+              focusDate: DateTime.now(),
+              loading: true),
+        ) {
     init(user);
   }
   UserData user;
@@ -40,7 +42,6 @@ class CalendarStateController extends StateNotifier<CalendarState> {
       return _fetchMyItem(id);
     }).toList();
     final List<Item> items = await Future.wait(tasks);
-    print(items);
     final Map<DateTime, List<Item>> events = _getCalendarEvents(items);
     state = state.copyWith(events: events, loading: false);
   }
@@ -94,17 +95,15 @@ class CalendarStateController extends StateNotifier<CalendarState> {
   Future<Item> _fetchMyItem(String id) async {
     final DocumentSnapshot eventDoc =
         await FirebaseService().db.collection('events').doc(id).get();
-    print(eventDoc.id);
     final Item event = Item.fromFireStore(eventDoc);
-    print(event);
     return event;
   }
 
   void onDaySelected(DateTime day, List<dynamic> events) {
-    state = state.copyWith(selectedEvents: events);
+    state = state.copyWith(focusDate: day, selectedEvents: events);
   }
 
   void onVisibleDaysChanged(DateTime date) {
-    state = state.copyWith(headerDate: date);
+    state = state.copyWith(focusDate: date);
   }
 }

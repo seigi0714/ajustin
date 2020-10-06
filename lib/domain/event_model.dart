@@ -16,7 +16,6 @@ class Item {
   );
 
   factory Item.fromFireStore(DocumentSnapshot doc) {
-    print(doc.data()['summary']);
     return Item._(
       doc.data()['kind'] ?? '',
       doc.data()['summary'] ?? 'no title',

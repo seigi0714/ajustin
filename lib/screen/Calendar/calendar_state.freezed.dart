@@ -16,12 +16,12 @@ class _$CalendarStateTearOff {
   _CalendarState call(
       {Map<DateTime, List<dynamic>> events,
       List<dynamic> selectedEvents,
-      DateTime headerDate,
+      DateTime focusDate,
       bool loading}) {
     return _CalendarState(
       events: events,
       selectedEvents: selectedEvents,
-      headerDate: headerDate,
+      focusDate: focusDate,
       loading: loading,
     );
   }
@@ -33,7 +33,7 @@ const $CalendarState = _$CalendarStateTearOff();
 mixin _$CalendarState {
   Map<DateTime, List<dynamic>> get events;
   List<dynamic> get selectedEvents;
-  DateTime get headerDate;
+  DateTime get focusDate;
   bool get loading;
 
   $CalendarStateCopyWith<CalendarState> get copyWith;
@@ -46,7 +46,7 @@ abstract class $CalendarStateCopyWith<$Res> {
   $Res call(
       {Map<DateTime, List<dynamic>> events,
       List<dynamic> selectedEvents,
-      DateTime headerDate,
+      DateTime focusDate,
       bool loading});
 }
 
@@ -62,7 +62,7 @@ class _$CalendarStateCopyWithImpl<$Res>
   $Res call({
     Object events = freezed,
     Object selectedEvents = freezed,
-    Object headerDate = freezed,
+    Object focusDate = freezed,
     Object loading = freezed,
   }) {
     return _then(_value.copyWith(
@@ -72,8 +72,8 @@ class _$CalendarStateCopyWithImpl<$Res>
       selectedEvents: selectedEvents == freezed
           ? _value.selectedEvents
           : selectedEvents as List<dynamic>,
-      headerDate:
-          headerDate == freezed ? _value.headerDate : headerDate as DateTime,
+      focusDate:
+          focusDate == freezed ? _value.focusDate : focusDate as DateTime,
       loading: loading == freezed ? _value.loading : loading as bool,
     ));
   }
@@ -88,7 +88,7 @@ abstract class _$CalendarStateCopyWith<$Res>
   $Res call(
       {Map<DateTime, List<dynamic>> events,
       List<dynamic> selectedEvents,
-      DateTime headerDate,
+      DateTime focusDate,
       bool loading});
 }
 
@@ -106,7 +106,7 @@ class __$CalendarStateCopyWithImpl<$Res>
   $Res call({
     Object events = freezed,
     Object selectedEvents = freezed,
-    Object headerDate = freezed,
+    Object focusDate = freezed,
     Object loading = freezed,
   }) {
     return _then(_CalendarState(
@@ -116,8 +116,8 @@ class __$CalendarStateCopyWithImpl<$Res>
       selectedEvents: selectedEvents == freezed
           ? _value.selectedEvents
           : selectedEvents as List<dynamic>,
-      headerDate:
-          headerDate == freezed ? _value.headerDate : headerDate as DateTime,
+      focusDate:
+          focusDate == freezed ? _value.focusDate : focusDate as DateTime,
       loading: loading == freezed ? _value.loading : loading as bool,
     ));
   }
@@ -125,20 +125,20 @@ class __$CalendarStateCopyWithImpl<$Res>
 
 class _$_CalendarState with DiagnosticableTreeMixin implements _CalendarState {
   const _$_CalendarState(
-      {this.events, this.selectedEvents, this.headerDate, this.loading});
+      {this.events, this.selectedEvents, this.focusDate, this.loading});
 
   @override
   final Map<DateTime, List<dynamic>> events;
   @override
   final List<dynamic> selectedEvents;
   @override
-  final DateTime headerDate;
+  final DateTime focusDate;
   @override
   final bool loading;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'CalendarState(events: $events, selectedEvents: $selectedEvents, headerDate: $headerDate, loading: $loading)';
+    return 'CalendarState(events: $events, selectedEvents: $selectedEvents, focusDate: $focusDate, loading: $loading)';
   }
 
   @override
@@ -148,7 +148,7 @@ class _$_CalendarState with DiagnosticableTreeMixin implements _CalendarState {
       ..add(DiagnosticsProperty('type', 'CalendarState'))
       ..add(DiagnosticsProperty('events', events))
       ..add(DiagnosticsProperty('selectedEvents', selectedEvents))
-      ..add(DiagnosticsProperty('headerDate', headerDate))
+      ..add(DiagnosticsProperty('focusDate', focusDate))
       ..add(DiagnosticsProperty('loading', loading));
   }
 
@@ -161,9 +161,9 @@ class _$_CalendarState with DiagnosticableTreeMixin implements _CalendarState {
             (identical(other.selectedEvents, selectedEvents) ||
                 const DeepCollectionEquality()
                     .equals(other.selectedEvents, selectedEvents)) &&
-            (identical(other.headerDate, headerDate) ||
+            (identical(other.focusDate, focusDate) ||
                 const DeepCollectionEquality()
-                    .equals(other.headerDate, headerDate)) &&
+                    .equals(other.focusDate, focusDate)) &&
             (identical(other.loading, loading) ||
                 const DeepCollectionEquality().equals(other.loading, loading)));
   }
@@ -173,7 +173,7 @@ class _$_CalendarState with DiagnosticableTreeMixin implements _CalendarState {
       runtimeType.hashCode ^
       const DeepCollectionEquality().hash(events) ^
       const DeepCollectionEquality().hash(selectedEvents) ^
-      const DeepCollectionEquality().hash(headerDate) ^
+      const DeepCollectionEquality().hash(focusDate) ^
       const DeepCollectionEquality().hash(loading);
 
   @override
@@ -185,7 +185,7 @@ abstract class _CalendarState implements CalendarState {
   const factory _CalendarState(
       {Map<DateTime, List<dynamic>> events,
       List<dynamic> selectedEvents,
-      DateTime headerDate,
+      DateTime focusDate,
       bool loading}) = _$_CalendarState;
 
   @override
@@ -193,7 +193,7 @@ abstract class _CalendarState implements CalendarState {
   @override
   List<dynamic> get selectedEvents;
   @override
-  DateTime get headerDate;
+  DateTime get focusDate;
   @override
   bool get loading;
   @override
